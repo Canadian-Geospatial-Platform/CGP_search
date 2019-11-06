@@ -56,4 +56,6 @@ Society
 
 API -  https://vk00s6bfad.execute-api.us-east-1.amazonaws.com/Production/search-in-society
 
-    
+UUID
+
+API - https://vk00s6bfad.execute-api.us-east-1.amazonaws.com/Production/search-by-uuid

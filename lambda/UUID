@@ -1,0 +1,47 @@
+"use strict";
+
+const AthenaExpress = require("athena-express"),
+    aws = require("aws-sdk");
+
+/* 
+ * AWS Credentials are not required here
+ * because the IAM Role assumed by this Lambda
+ * has the necessary permission to execute Athena queries
+ * and store the result in Amazon S3 bucket
+ */
+
+const athenaExpressConfig = {
+    aws,
+    db: "cgp_metadata_lake_dev",
+    getStats: true
+};
+
+const athenaExpress = new AthenaExpress(athenaExpressConfig);
+
+exports.handler = async(event, context, callback) => {
+    
+    var uuid = event.uuid;
+
+    const sqlQuery = "SELECT title_translated.en AS title, notes_translated.en AS notes, array_join(subject, ', ') AS subject, array_join(keywords.en, ', ') AS keywords, array_join(topic_category, ', ') AS topic_category, distributor.en.organization_name AS organization_name, id AS id, source_metadata_date_created AS creation, date_published AS published, restrictions, distributor.en.electronic_mail_address AS email, distributor.en.phone AS phone, distributor.en.address AS address, distributor.en.city AS city, distributor.en.administrative_area AS administrative_area, distributor.en.country AS country, distributor.en.postal_code AS postal_code, resources AS resources FROM metadata WHERE id = '" + uuid + "'";
+
+    try {
+        let results = await athenaExpress.query(sqlQuery);
+
+        var response = {
+            "statusCode": 200,
+            // "headers": {
+            //    "Header": "Header_Value"
+            // },
+            "body": results
+        };
+
+        // console.log(response);
+        // console.log(JSON.stringify(response));
+        // context.succeed(response);
+        callback(null, response);
+    }
+
+    catch (error) {
+        callback(error, null);
+    }
+};
