@@ -1,0 +1,47 @@
+"use strict";
+
+const AthenaExpress = require("athena-express"),
+    aws = require("aws-sdk");
+
+/* 
+ * AWS Credentials are not required here
+ * because the IAM Role assumed by this Lambda
+ * has the necessary permission to execute Athena queries
+ * and store the result in Amazon S3 bucket
+ */
+
+const athenaExpressConfig = {
+    aws,
+    db: "napl_metadata_dev",
+    getStats: true
+};
+
+const athenaExpress = new AthenaExpress(athenaExpressConfig);
+
+exports.handler = async(event, context, callback) => {
+    
+    var id = event.id;
+
+    const sqlQuery = "SELECT id, X_NO AS X_NW, Y_NO AS Y_NW, X_NE, Y_NE, X_SO AS X_SW, Y_SO AS Y_SW, X_SE, Y_SE, CENTER_LATITUDE, CENTER_LONGITUDE, NAPL_DATE, NTS_MAP, PHOTO_NUMBER, ROLL_NUMBER, LINE_NUMBER AS PHOTO_LINE_NUMBER, FLIGHT_SEG_ID, ROLL_ID, NEW_PHOTO_NUMBER, AREA, CAMERA_FILTER, CAMERA_NAME, CONTRACT_NUMBER, FILM_BASE, FILM_COLOR, FILM_SIZE, FILM_TYPE, FILM_NUMBER, FOCAL_LENS, FRAME_TOTAL, HISTORY_MEMO, LENS_FLINCH, LENS_NAME, NOTE, INPUT_DATE, FLIGHT_PLAN_ID, LONGITUDE AS ROLL_LONGITUDE, LATITUDE AS ROLL_LATITUDE, ALTITUDE_1 AS ALTITUDE, ANGLE, FRAME_START, FRAME_END, LATITUDE_START, LATITUDE_END, LINE_NUMBER_1 AS FLIGHT_LINE_NUMBER, LONGITUDE_START, LONGITUDE_END, SCALE_1 AS SCALE, SEASON FROM napl_metadata LIMIT 25";
+
+    try {
+        let results = await athenaExpress.query(sqlQuery);
+
+        var response = {
+            "statusCode": 200,
+            // "headers": {
+            //    "Header": "Header_Value"
+            // },
+            "body": results
+        };
+
+        // console.log(response);
+        // console.log(JSON.stringify(response));
+        // context.succeed(response);
+        callback(null, response);
+    }
+
+    catch (error) {
+        callback(error, null);
+    }
+};
