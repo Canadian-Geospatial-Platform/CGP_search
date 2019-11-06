@@ -1,0 +1,59 @@
+Administration
+    Boundaries - boundaries
+    Location - location
+    Planning_Cadastre - planning_cadastre
+
+API - https://vk00s6bfad.execute-api.us-east-1.amazonaws.com/Production/search-in-administration
+
+
+
+Economy
+    Economy - economy
+    Farming - farming
+
+API - https://vk00s6bfad.execute-api.us-east-1.amazonaws.com/Production/search-in-economy
+
+Emergency
+
+API - https://vk00s6bfad.execute-api.us-east-1.amazonaws.com/Production/search-in-emergency
+
+Environment
+    Biota - biota
+    Climate and Environment - environment
+    Elevation - elevation
+    Inland Waters - inland_waters
+    Oceans - oceans
+    Climatology-meterology-atmoshpere - climatology_meterology_atmosphere
+
+API - https://vk00s6bfad.execute-api.us-east-1.amazonaws.com/Production/search-in-environment
+
+Imagery
+    Imagery Basemap - imagery_base_maps_earth_cover
+    Earthcover
+
+API - https://vk00s6bfad.execute-api.us-east-1.amazonaws.com/Production/search-in-imagery
+
+Infrastructure
+    Structure - structure
+    Transportation - transport
+    Utilities and Communication - utilities_communication
+
+API - https://vk00s6bfad.execute-api.us-east-1.amazonaws.com/Production/search-in-infrastructure
+
+Legal
+
+API - https://vk00s6bfad.execute-api.us-east-1.amazonaws.com/Production/search-in-legal
+
+Science
+    Geoscientific Information - geoscientific_information
+
+API - https://vk00s6bfad.execute-api.us-east-1.amazonaws.com/Production/search-in-science
+
+Society
+    Health - health
+    Society - society
+    Intelligence Military - intelligence_military
+
+API -  https://vk00s6bfad.execute-api.us-east-1.amazonaws.com/Production/search-in-society
+
+    

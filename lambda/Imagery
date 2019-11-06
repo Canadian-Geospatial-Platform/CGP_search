@@ -1,0 +1,47 @@
+"use strict";
+
+const AthenaExpress = require("athena-express"),
+    aws = require("aws-sdk");
+
+/* 
+ * AWS Credentials are not required here
+ * because the IAM Role assumed by this Lambda
+ * has the necessary permission to execute Athena queries
+ * and store the result in Amazon S3 bucket
+ */
+
+const athenaExpressConfig = {
+    aws,
+    db: "cgp_metadata_lake_dev",
+    getStats: true
+};
+
+const athenaExpress = new AthenaExpress(athenaExpressConfig);
+
+exports.handler = async(event, context, callback) => {
+    
+    var keyword = event.keyword;
+    
+    const sqlQuery = "SELECT title_translated.en AS title, notes_translated.en AS notes, array_join(keywords.en, ', ') AS keywords, array_join(topic_category, ', ') AS topic_category, distributor.en.organization_name AS organization_name, id AS id FROM metadata WHERE lower (array_join(topic_category, ', ')) LIKE lower ('%imagery_base_maps_earth_cover%') AND lower (array_join(keywords.en, ', ')) LIKE lower ('%" + keyword + "%') OR lower (array_join(topic_category, ', ')) LIKE lower ('%imagery_base_maps_earth_cover%') AND lower(notes_translated.en) LIKE lower('%" + keyword + "%') OR lower (array_join(topic_category, ', ')) LIKE lower ('%imagery_base_maps_earth_cover%') AND lower (title_translated.en) LIKE lower('%" + keyword + "%')";
+
+    try {
+        let results = await athenaExpress.query(sqlQuery);
+
+        var response = {
+            "statusCode": 200,
+            // "headers": {
+            //    "Header": "Header_Value"
+            // },
+            "body": results
+        };
+
+        // console.log(response);
+        // console.log(JSON.stringify(response));
+        // context.succeed(response);
+        callback(null, response);
+    }
+
+    catch (error) {
+        callback(error, null);
+    }
+};
